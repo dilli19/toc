@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// NFA transition function
+bool transition(int state, char input) {
+    switch (state) {
+        case 0:
+            return (input == 'o');
+        case 1:
+            return (input == '1');
+        default:
+            return false; // Invalid state
+    }
+}
+
+// NFA simulation function
+bool isAccepted(char *str) {
+    int currentState = 0;
+
+    for (int i = 0; str[i] != '\0'; ++i) {
+        // Simulate epsilon transitions (e.g., from state 0 to state 1 without consuming input)
+        if (currentState == 0 && transition(0, '\0') && transition(1, str[i])) {
+            currentState = 1;
+        }
+
+        if (transition(currentState, str[i])) {
+            currentState = 1;
+        } else {
+            return false; // Invalid transition
+        }
+    }
+
+    return currentState == 1;
+}
+
+int main() {
+    char inputString[100];
+
+    printf("Enter a string: ");
+    scanf("%s", inputString);
+
+    if (isAccepted(inputString)) {
+        printf("String accepted!\n");
+    } else {
+        printf("String rejected!\n");
+    }
+
+    return 0;
+}
