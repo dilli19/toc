@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str);
+
+// Function to derive A in the CFG
+bool deriveA(char *str, int *index);
+
+int main() {
+    char inputString[100];
+
+    printf("Enter a string: ");
+    scanf("%s", inputString);
+
+    if (belongsToCFG(inputString)) {
+        printf("String belongs to the CFG language!\n");
+    } else {
+        printf("String does not belong to the CFG language!\n");
+    }
+
+    return 0;
+}
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str) {
+    int index = 0;
+
+    // Start the derivation with S
+    if (str[index] == '0') {
+        index++;
+
+        // Derive A
+        if (deriveA(str, &index)) {
+            // After A, expect '1'
+            if (str[index] == '1') {
+                index++;
+
+                // Check if the entire string has been processed
+                return str[index] == '\0';
+            }
+        }
+    }
+
+    return false;
+}
+
+// Function to derive A in the CFG
+bool deriveA(char *str, int *index) {
+    // Base case: ε production
+    if (str[*index] == '\0') {
+        return true;
+    }
+
+    // A → 0A | 1A
+    if (str[*index] == '0') {
+        (*index)++;
+        return deriveA(str, index);
+    } else if (str[*index] == '1') {
+        (*index)++;
+        return deriveA(str, index);
+    }
+
+    return false; // Invalid production
+}
