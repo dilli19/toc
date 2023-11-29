@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str);
+
+// Function to derive A in the CFG
+bool deriveA(char *str, int *index);
+
+int main() {
+    char inputString[100];
+
+    printf("Enter a string: ");
+    scanf("%s", inputString);
+
+    if (belongsToCFG(inputString)) {
+        printf("String belongs to the CFG language!\n");
+    } else {
+        printf("String does not belong to the CFG language!\n");
+    }
+
+    return 0;
+}
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str) {
+    // Start the derivation with S
+    if (*str == '\0') {
+        return false; // Empty string is not in the language
+    }
+
+    if (*str == '0' || *str == '1') {
+        // A → 0A | 1A
+        int index = 0;
+        if (deriveA(str, &index)) {
+            if (str[index] == '1' && str[index + 1] == '0' && str[index + 2] == '1') {
+                index += 3;
+                // Check if the entire string has been processed
+                return str[index] == '\0';
+            }
+        }
+    }
+
+    return false;
+}
+
+// Function to derive A in the CFG
+bool deriveA(char *str, int *index) {
+    // Base case: ε production
+    if (str[*index] == '\0') {
+        return true;
+    }
+
+    // A → 0A | 1A
+    if (str[*index] == '0' || str[*index] == '1') {
+        (*index)++;
+        return deriveA(str, index);
+    }
+
+    return false; // Invalid production
+}
