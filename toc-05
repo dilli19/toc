@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str);
+
+int main() {
+    char inputString[100];
+
+    printf("Enter a string: ");
+    scanf("%s", inputString);
+
+    if (belongsToCFG(inputString)) {
+        printf("String belongs to the CFG language!\n");
+    } else {
+        printf("String does not belong to the CFG language!\n");
+    }
+
+    return 0;
+}
+
+// Function to check whether the given string belongs to the CFG language
+bool belongsToCFG(char *str) {
+    // Start the derivation with S
+    if (*str == '\0') {
+        return true; // ε production
+    } else if (*str == '0') {
+        // S → 0S0
+        str++;
+        if (belongsToCFG(str)) {
+            if (*str == '0') {
+                str++;
+                return true;
+            }
+        }
+    } else if (*str == '1') {
+        // A → 1A
+        str++;
+        if (*str == '\0') {
+            return true; // ε production for A
+        } else if (belongsToCFG(str)) {
+            if (*str == '1') {
+                str++;
+                return true;
+            }
+        }
+    } else {
+        return false; // Invalid character
+    }
+
+    return false;
+}
